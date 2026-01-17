@@ -305,6 +305,27 @@ i {
     background: linear-gradient(90deg, #0d9488, #0284c7);
 }
 
+.hero-strip h2,
+.hero-strip h2 i,
+.hero-strip p {
+    color: white !important;
+}
+
+.stButton > button {
+    background: linear-gradient(90deg, #14b8a6, #06b6d4) !important;
+    color: white !important;
+    border: none !important;
+}
+
+.stButton > button:hover {
+    background: linear-gradient(90deg, #0d9488, #0284c7) !important;
+    color: white !important;
+}
+
+i.fa-solid {
+    color: inherit !important;
+}
+
 </style>
 """,  unsafe_allow_html=True)
 

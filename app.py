@@ -588,7 +588,7 @@ elif page == "Dashboard":
     df.columns = df.columns.str.strip()
     sns.histplot(df["income_annum"], ax=ax)
     plt.tight_layout()
-    st.pyplot(fig, width='content')
+    st.pyplot(fig, use_container_width=False)
 
 
 # INSIGHTS PAGE (VISUAL GRAPHS)
@@ -607,7 +607,7 @@ elif page == "Insights":
     fig1, ax1 = plt.subplots(figsize=(5,3.5), dpi=120)
     sns.countplot(x="loan_status", data=df, ax=ax1)
     plt.tight_layout()
-    st.pyplot(fig1, width='content')
+    st.pyplot(fig1, use_container_width=False)
 
     st.write("---")
     # Graph 2
@@ -621,7 +621,7 @@ elif page == "Insights":
         ax=ax2
     )
     plt.tight_layout()
-    st.pyplot(fig2, width='content')
+    st.pyplot(fig2, use_container_width=False)
 
     st.write("---")
     # Graph 3
@@ -629,5 +629,5 @@ elif page == "Insights":
     fig3, ax3 = plt.subplots(figsize=(5,3.5), dpi=120)
     sns.countplot(x="education", hue="loan_status", data=df, ax=ax3)
     plt.tight_layout()
-    st.pyplot(fig3, width='content')
+    st.pyplot(fig3, use_container_width=False)
 

@@ -8,8 +8,14 @@ import streamlit.components.v1 as components
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from io import BytesIO
+from groq import Groq
 import matplotlib
 matplotlib.use("Agg")
+
+if "chatbox" in st.session_state:
+    del st.session_state["chatbox"]
+
+client = Groq(api_key=os.getenv("GROQ_API_KEY") or "PASTE_YOUR_API_KEY_HERE")
 
 # Streamlit Page Config
 st.set_page_config(page_title="Loan approval prediction", layout="centered")
@@ -110,6 +116,7 @@ def generate_pdf(dataframe, approved, risk):
     c.save()
     buffer.seek(0)
     return buffer
+
 
 
 # Load Model & Dataset
@@ -339,8 +346,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 st.sidebar.title("Navigation")
 page = st.sidebar.radio(
     "Go to",
-    ["Home", "Loan Prediction", "Dashboard", "Insights"],
-    index=["Home", "Loan Prediction", "Dashboard", "Insights"].index(st.session_state.page)
+    ["Home", "Loan Prediction", "Dashboard", "Insights","Chatbot"],
+    index=["Home", "Loan Prediction", "Dashboard", "Insights","Chatbot"].index(st.session_state.page)
 )
 st.session_state.page = page
 
@@ -651,3 +658,43 @@ elif page == "Insights":
     plt.tight_layout()
     st.pyplot(fig3, use_container_width=False)
 
+elif page== "Chatbot":
+    # ================= SIMPLE WORKING CHATBOT =================
+
+    st.markdown("## Loan Assistant")
+
+    # store chat
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+
+    # display chat history
+    for msg in st.session_state.messages:
+        with st.chat_message(msg["role"]):
+            st.write(msg["content"])
+
+    # user input
+    user_input = st.chat_input("Ask about loan, EMI, eligibility...")
+
+    if user_input:
+        # show user message
+        st.session_state.messages.append({"role": "user", "content": user_input})
+
+        with st.chat_message("user"):
+            st.write(user_input)
+
+        # call Groq
+        response = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=[
+                {"role": "system", "content": "You are a helpful loan assistant chatbot."},
+                {"role": "user", "content": user_input}
+            ]
+        )
+
+        bot_reply = response.choices[0].message.content
+
+        # show bot message
+        st.session_state.messages.append({"role": "assistant", "content": bot_reply})
+
+        with st.chat_message("assistant"):
+            st.write(bot_reply)
